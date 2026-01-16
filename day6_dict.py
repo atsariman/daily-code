@@ -8,4 +8,4 @@ crops = {
 }
 
 for crop, price in crops.items():
-    print(f"{crop}: {price}원") 
+    print(f"{crop}: {price}원")
