@@ -55,6 +55,26 @@ elif menu == "실시간 날씨":
 # --- [메뉴 3] 유통 시세 분석 (데이터 시각화) ---
 elif menu == "유통 시세 분석":
     st.title("📈 농산물 유통 시세")
+
+# 사이드바 메뉴 리스트에 "오시는 길"을 추가해줘.
+# folium 라이브러리를 사용해서 제주도(위도 33.4996, 경도 126.5312) 지도를 보여줘.
+# 지도 위에 빨간색 마커를 찍고, 마커를 누르면 "제주 푸른 콩 농장"이라고 나오게 해줘.
+# streamlit_folium을 써서 화면에 띄워줘.    
+    import streamlit_folium
+    import folium
+
+    m = folium.Map(location=[33.4996, 126.5312], zoom_start=12)
+    folium.Marker([33.4996, 126.5312], popup="제주 푸른 콩 농장").add_to(m)
+
+    st_folium = streamlit_folium.st_folium(m, width=725)
+    st.sidebar.title("🚜 스마트팜 시스템"
+                     "\n🌾 제주 푸른 콩 농장" \
+                     "\n📍 제주특별자치도 제주시 애월읍 평화로 123" \
+                     "\n📞 064-1234")
+    st.sidebar.info("사용자: 김농부 (관리자)")
+    menu = st.sidebar.radio("메뉴 이동", ["대시보드", "실시간 날씨", "유통 시세 분석", "오시는 길"])    
+    st.title("📉 농산물 유통 시세 그래프")
+    
     
     data = {
         '날짜': ['1월 1일', '1월 2일', '1월 3일', '1월 4일', '1월 5일'],
