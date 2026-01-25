@@ -13,7 +13,7 @@ st.set_page_config(
 # 2. 사이드바 메뉴 구성
 st.sidebar.title("🚜 스마트팜 시스템")
 st.sidebar.info("사용자: 김농부 (관리자)")
-menu = st.sidebar.radio("메뉴 이동", ["대시보드", "실시간 날씨", "유통 시세 분석"])
+menu = st.sidebar.radio("메뉴 이동", ["대시보드", "실시간 날씨", "유통 시세 분석", "수확량 기록", "오시는 길", "AI 병충해 진단"])
 
 # --- [메뉴 1] 대시보드 (메인 화면) ---
 if menu == "대시보드":
@@ -60,6 +60,17 @@ elif menu == "유통 시세 분석":
 # folium 라이브러리를 사용해서 제주도(위도 33.4996, 경도 126.5312) 지도를 보여줘.
 # 지도 위에 빨간색 마커를 찍고, 마커를 누르면 "제주 푸른 콩 농장"이라고 나오게 해줘.
 # streamlit_folium을 써서 화면에 띄워줘.    
+
+# 사이드바메뉴에 "AI 병충해 진단"을 추가해줘.
+# PIL 라이브러리와 time 라이브러리를 사용해.
+# 1. 파일 업로더(file_uploader)를 만들어서 jpg, png 사진을 올릴 수 있게 해줘.
+# 2. 사진을 올리면 화면에 크게 보여줘.
+# 3. "진단하기" 버튼을 누르면 3초 동안 "분석 중..."이라는 로딩바(spinner)를 보여줘.
+# 4. 분석이 끝나면 "진단 결과: 잎마름병 초기(주의)"라는 메시지와 대처법을 띄워줘.
+elif menu == "오시는 길":
+    st.title("📍 제주 푸른 콩 농장 오시는 길")
+    st.image("https://images.unsplash.com/photo-1550989460-0adf9ea622e2", caption="우리 농장 전경")
+
     import streamlit_folium
     import folium
 
@@ -89,3 +100,30 @@ elif menu == "유통 시세 분석":
         st.line_chart(df)
     with tab2:
         st.bar_chart(df)
+elif menu == "AI 병충해 진단":
+    st.title("🤖 AI 농작물 진단기")
+    st.write("아픈 농작물의 사진을 올려주세요. 인공지능이 분석합니다.")
+    st.divider()
+
+    # 1. 파일 업로드 기능 (카메라나 앨범에서 가져옴)
+    uploaded_file = st.file_uploader("사진 업로드", type=["jpg", "png", "jpeg"])
+
+    if uploaded_file is not None:
+        # 2. 업로드된 이미지를 화면에 표시
+        image = Image.open(uploaded_file)
+        st.image(image, caption="업로드된 사진", use_container_width=True)
+        
+        st.write("") # 빈 줄 띄우기
+        
+        # 3. 진단 버튼
+        if st.button("🔍 AI 진단 시작"):
+            # 로딩 효과 (AI가 생각하는 척)
+            with st.spinner("AI가 잎사귀 색상을 분석 중입니다..."):
+                time.sleep(3) # 3초 기다림
+            
+            # 4. 결과 보여주기
+            st.success("분석 완료!")
+            st.metric(label="건강 상태", value="주의 필요", delta="-15점")
+            
+            st.warning("💡 **진단 결과:** '잎마름병' 초기 증상이 의심됩니다.")
+            st.info("💊 **처방:** 물 주는 횟수를 늘리고, 통풍이 잘 되게 해주세요.")
